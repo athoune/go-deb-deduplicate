@@ -8,7 +8,16 @@ import (
 )
 
 func main() {
-	err := archive.UnXZ(os.Args[1], os.Args[2])
+	name := os.Args[1]
+	in, err := os.Open(name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	out, err := os.OpenFile(name[:len(name)-3], os.O_CREATE|os.O_WRONLY, 0640)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = archive.XZDecompress(in, out)
 	if err != nil {
 		log.Fatal(err)
 	}

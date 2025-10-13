@@ -9,11 +9,7 @@ import (
 	"github.com/ulikunitz/xz"
 )
 
-func UnXZ(xzFile string, destFolder string) error {
-	err := os.MkdirAll(destFolder, 0750)
-	if err != nil {
-		return err
-	}
+func UnXZ(xzFile string) error {
 	f, err := os.Open(xzFile)
 	if err != nil {
 		return err
@@ -23,7 +19,7 @@ func UnXZ(xzFile string, destFolder string) error {
 		return fmt.Errorf("ZX Read Index error: %v", err)
 	}
 
-	dst, err := os.OpenFile(fmt.Sprintf("%s/index.gob", destFolder),
+	dst, err := os.OpenFile(fmt.Sprintf("%s.index", xzFile),
 		os.O_CREATE|os.O_WRONLY, 0640)
 	if err != nil {
 		return err
@@ -38,7 +34,7 @@ func UnXZ(xzFile string, destFolder string) error {
 	if err != nil {
 		return err
 	}
-	dstArchive, err := os.OpenFile(fmt.Sprintf("%s/toto", destFolder),
+	dstArchive, err := os.OpenFile(xzFile[:len(xzFile)-3],
 		os.O_CREATE|os.O_WRONLY, 0640)
 	if err != nil {
 		return err
