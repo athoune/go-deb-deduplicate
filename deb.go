@@ -2,11 +2,11 @@ package main
 
 import (
 	"archive/tar"
-	"bytes"
 	"fmt"
 	"io"
 	"os"
 
+	chunker_ "github.com/athoune/go-deb-diff/chunker"
 	"github.com/blakesmith/ar"
 	"github.com/ulikunitz/xz"
 )
@@ -17,6 +17,8 @@ func Read(path string) error {
 		return err
 	}
 	defer f.Close()
+
+	chunker := chunker_.New("chunks")
 	reader := ar.NewReader(f)
 	header, err := reader.Next()
 	if err != nil {
@@ -47,8 +49,10 @@ func Read(path string) error {
 				return err
 			}
 			fmt.Printf("\t\t%v %d\n", th.Name, th.Size)
-			var buf bytes.Buffer
-			io.Copy(&buf, tReader)
+			err = chunker.Chunk(tReader)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
