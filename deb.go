@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	chunker_ "github.com/athoune/go-deb-diff/chunker"
+	chunker_ "github.com/athoune/go-deb-deduplicate/chunker"
 	"github.com/blakesmith/ar"
 	"github.com/ulikunitz/xz"
 )

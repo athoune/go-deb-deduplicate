@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/athoune/go-deb-diff/archive"
+	"github.com/athoune/go-deb-deduplicate/archive"
 )
 
 func main() {

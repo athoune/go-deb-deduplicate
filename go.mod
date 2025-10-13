@@ -1,4 +1,4 @@
-module github.com/athoune/go-deb-diff
+module github.com/athoune/go-deb-deduplicate
 
 go 1.24.4
 
