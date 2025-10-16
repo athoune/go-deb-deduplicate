@@ -1,5 +1,3 @@
-github.com/DataDog/zstd v1.5.6 h1:LbEglqepa/ipmmQJUDnSsfvA8e8IStVcGaFWDuxvGOY=
-github.com/DataDog/zstd v1.5.6/go.mod h1:g4AWEaM3yOg3HYfnJ3YIawPnVdXJh9QME85blwSAmyw=
 github.com/PlakarKorp/go-cdc-chunkers v1.0.2 h1:sBWPtDQiezaTjPqF5skLbdjoo8RgiIuseGaFNQnmoOs=
 github.com/PlakarKorp/go-cdc-chunkers v1.0.2/go.mod h1:y7ag92JABKPBDoSOPwedssQ5NIOgjRm4Mu6yTBpmUMY=
 github.com/SaveTheRbtz/zstd-seekable-format-go/pkg v0.8.0 h1:tgjwQrDH5m6jIYB7kac5IQZmfUzQNseac/e3H4VoCNE=

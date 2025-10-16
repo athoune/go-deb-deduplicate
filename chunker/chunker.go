@@ -9,9 +9,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/DataDog/zstd"
 	chunkers "github.com/PlakarKorp/go-cdc-chunkers"
 	_ "github.com/PlakarKorp/go-cdc-chunkers/chunkers/fastcdc"
+	"github.com/klauspost/compress/zstd"
 )
 
 type Chunker struct {
@@ -56,7 +56,10 @@ func (c Chunker) Chunk(rd io.Reader) error {
 					return err
 				}
 				defer f.Close()
-				zw := zstd.NewWriter(f)
+				zw, err := zstd.NewWriter(f)
+				if err != nil {
+					return err
+				}
 				defer zw.Close()
 				_, err = zw.Write(chunk)
 				if err != nil {

@@ -5,7 +5,6 @@ go 1.24.4
 toolchain go1.24.8
 
 require (
-	github.com/DataDog/zstd v1.5.6
 	github.com/PlakarKorp/go-cdc-chunkers v1.0.2
 	github.com/SaveTheRbtz/zstd-seekable-format-go/pkg v0.8.0
 	github.com/blakesmith/ar v0.0.0-20190502131153-809d4375e1fb
