@@ -56,7 +56,7 @@ func Read(path string) error {
 			if err != nil {
 				return err
 			}
-			err = chunker_.ChunkAndStore(tReader, tx)
+			_, err = chunker_.Chunk(tReader, tx)
 			if err != nil {
 				return err
 			}

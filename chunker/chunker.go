@@ -1,20 +1,24 @@
 package chunker
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"io"
 	"log"
 
 	chunkers "github.com/PlakarKorp/go-cdc-chunkers"
 	_ "github.com/PlakarKorp/go-cdc-chunkers/chunkers/fastcdc"
-	"github.com/athoune/go-deb-deduplicate/warehouse"
 )
 
 const CHUNK_MIN_SIZE = 10 * 1000
 const CHUNK_NORMAL_SIZE = 100 * 1000
 const CHUNK_MAX_SIZE = 5 * 1000 * 1000
 
-func ChunkAndStore(reader io.Reader, transaction *warehouse.Transaction) error {
+type ChunkSetter interface {
+	Set([]byte, []byte) error
+}
+
+func Chunk(reader io.Reader, setter ChunkSetter) ([]byte, error) {
 	chunker, err := chunkers.NewChunker("fastcdc", reader,
 		&chunkers.ChunkerOpts{
 			MinSize:    CHUNK_MIN_SIZE,
@@ -22,8 +26,9 @@ func ChunkAndStore(reader io.Reader, transaction *warehouse.Transaction) error {
 			MaxSize:    CHUNK_MAX_SIZE,
 		})
 	if err != nil {
-		return err
+		return nil, err
 	}
+	ids := &bytes.Buffer{}
 
 	for {
 		chunk, err := chunker.Next()
@@ -38,10 +43,17 @@ func ChunkAndStore(reader io.Reader, transaction *warehouse.Transaction) error {
 		}
 		hasher := sha256.New()
 		hasher.Write(chunk)
-		err = transaction.Set(hasher.Sum(nil), chunk)
+		h := hasher.Sum(nil)
+		if setter != nil {
+			err = setter.Set(h, chunk)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		_, err = ids.Write(h)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
-	return nil
+	return ids.Bytes(), nil
 }
