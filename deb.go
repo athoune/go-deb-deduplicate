@@ -7,6 +7,7 @@ import (
 	"os"
 
 	chunker_ "github.com/athoune/go-deb-deduplicate/chunker"
+	"github.com/athoune/go-deb-deduplicate/warehouse"
 	"github.com/blakesmith/ar"
 	"github.com/ulikunitz/xz"
 )
@@ -18,7 +19,14 @@ func Read(path string) error {
 	}
 	defer f.Close()
 
-	chunker := chunker_.New("chunks")
+	store, err := warehouse.New("test_deb")
+	if err != nil {
+		return err
+	}
+	tx, err := store.Transaction()
+	if err != nil {
+		return err
+	}
 	reader := ar.NewReader(f)
 	header, err := reader.Next()
 	if err != nil {
@@ -41,15 +49,14 @@ func Read(path string) error {
 		}
 		tReader := tar.NewReader(xzReader)
 		for {
-			th, err := tReader.Next()
+			_, err := tReader.Next()
 			if err == io.EOF {
 				break
 			}
 			if err != nil {
 				return err
 			}
-			fmt.Printf("\t\t%v %d\n", th.Name, th.Size)
-			err = chunker.Chunk(tReader)
+			err = chunker_.ChunkAndStore(tReader, tx)
 			if err != nil {
 				return err
 			}
