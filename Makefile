@@ -10,6 +10,7 @@ bin:
 test:
 	go test -timeout 10s -v -cover ./archive
 	go test -timeout 10s -v -cover ./chunker
+	go test -timeout 10s -v -cover ./deb
 	go test -timeout 10s -v -cover ./warehouse
 
 docker:
