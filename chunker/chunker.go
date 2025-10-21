@@ -10,15 +10,15 @@ import (
 	_ "github.com/PlakarKorp/go-cdc-chunkers/chunkers/fastcdc"
 )
 
-const CHUNK_MIN_SIZE = 10 * 1000
-const CHUNK_NORMAL_SIZE = 100 * 1000
-const CHUNK_MAX_SIZE = 5 * 1000 * 1000
+const CHUNK_MIN_SIZE = 1 * 1000
+const CHUNK_NORMAL_SIZE = 5 * 1000
+const CHUNK_MAX_SIZE = 100 * 1000
 
-type ChunkSetter interface {
-	Set([]byte, []byte) error
+type ChunkPutter interface {
+	Put([]byte, []byte) error
 }
 
-func Chunk(reader io.Reader, setter ChunkSetter) ([]byte, error) {
+func Chunk(reader io.Reader, putter ChunkPutter) ([]byte, error) {
 	chunker, err := chunkers.NewChunker("fastcdc", reader,
 		&chunkers.ChunkerOpts{
 			MinSize:    CHUNK_MIN_SIZE,
@@ -44,8 +44,8 @@ func Chunk(reader io.Reader, setter ChunkSetter) ([]byte, error) {
 		hasher := sha256.New()
 		hasher.Write(chunk)
 		h := hasher.Sum(nil)
-		if setter != nil {
-			err = setter.Set(h, chunk)
+		if putter != nil {
+			err = putter.Put(h, chunk)
 			if err != nil {
 				log.Fatal(err)
 			}
