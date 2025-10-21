@@ -1,75 +1,41 @@
 package main
 
 import (
-	"archive/tar"
 	"fmt"
-	"io"
 	"os"
 
-	chunker_ "github.com/athoune/go-deb-deduplicate/chunker"
-	"github.com/athoune/go-deb-deduplicate/warehouse"
-	"github.com/blakesmith/ar"
-	"github.com/ulikunitz/xz"
+	"github.com/athoune/go-deb-deduplicate/deduplicate"
 )
 
-func Read(path string) error {
-	f, err := os.Open(path)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
+func Read(paths ...string) error {
 
-	store, err := warehouse.New("test_deb")
+	dedup, err := deduplicate.New("test_deb")
 	if err != nil {
 		return err
 	}
-	tx, err := store.Transaction()
+	tx, err := dedup.Transaction()
 	if err != nil {
 		return err
 	}
-	reader := ar.NewReader(f)
-	header, err := reader.Next()
-	if err != nil {
-		return err
-	}
-	fmt.Printf("%#v\n", header)
 
-	for {
-		h, err := reader.Next()
-		if err == io.EOF {
-			break
-		}
+	for _, path := range paths {
+		fmt.Println(path)
+		err = tx.Add(path)
 		if err != nil {
 			return err
 		}
-		fmt.Printf("\t%#v\n", h)
-		xzReader, err := xz.NewReader(reader)
-		if err != nil {
-			return err
-		}
-		tReader := tar.NewReader(xzReader)
-		for {
-			_, err := tReader.Next()
-			if err == io.EOF {
-				break
-			}
-			if err != nil {
-				return err
-			}
-			_, err = chunker_.Chunk(tReader, tx)
-			if err != nil {
-				return err
-			}
-		}
 	}
 
-	return nil
+	err = tx.Close()
+	if err != nil {
+		return err
+	}
+	return dedup.Close()
 }
 
 func main() {
-	err := Read(os.Args[1])
+	err := Read(os.Args[1:]...)
 	if err != nil {
 		panic(err)
 	}
-
 }
