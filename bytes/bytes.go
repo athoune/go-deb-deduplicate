@@ -30,6 +30,7 @@ func Union(a []byte, b []byte, size int) []byte {
 	return resp
 }
 
+// WhatsUp which chunks are missing from the old version.
 func WhatsUp(old []byte, fresh []byte, size int) []byte {
 	old_s := rawToSet(old, size)
 	todo := make(map[string]interface{})
