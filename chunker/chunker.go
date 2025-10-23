@@ -14,11 +14,11 @@ const CHUNK_MIN_SIZE = 1 * 1000
 const CHUNK_NORMAL_SIZE = 5 * 1000
 const CHUNK_MAX_SIZE = 100 * 1000
 
-type ChunkPutter interface {
+type Putter interface {
 	Put([]byte, []byte) error
 }
 
-func Chunk(reader io.Reader, putter ChunkPutter) ([]byte, error) {
+func Chunk(reader io.Reader, putter Putter) ([]byte, error) {
 	chunker, err := chunkers.NewChunker("fastcdc", reader,
 		&chunkers.ChunkerOpts{
 			MinSize:    CHUNK_MIN_SIZE,
