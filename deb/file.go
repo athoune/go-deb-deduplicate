@@ -45,3 +45,18 @@ func (d *Deb) ToBin() ([]byte, error) {
 	}
 	return w.Bytes(), nil
 }
+
+func (d *Deb) Chunks() []byte {
+	l := 0
+	for _, f := range d.Files {
+		l += len(f.Contents)
+	}
+	r := make([]byte, l)
+	i := 0
+	for _, f := range d.Files {
+		ll := len(f.Contents)
+		copy(r[i:i+ll], f.Contents)
+		i += ll
+	}
+	return r
+}
