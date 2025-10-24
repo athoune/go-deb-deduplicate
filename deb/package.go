@@ -13,7 +13,7 @@ import (
 )
 
 // ReadPackage read a deb package, chunk it and store chunks with a chunker.ChunkPutter
-func ReadPackage(r io.Reader, name string, putter store.Putter) (*Deb, error) {
+func ReadPackage(r io.Reader, name string, putter store.Putter, untar bool) (*Deb, error) {
 	d := &Deb{
 		Files: make([]*File, 0),
 	}
@@ -43,20 +43,31 @@ func ReadPackage(r io.Reader, name string, putter store.Putter) (*Deb, error) {
 		if err != nil {
 			return nil, err
 		}
-		tReader := tar.NewReader(xzReader)
-		for {
-			th, err := tReader.Next()
-			if err == io.EOF {
-				break
+		if untar {
+			tReader := tar.NewReader(xzReader)
+			for {
+				th, err := tReader.Next()
+				if err == io.EOF {
+					break
+				}
+				if err != nil {
+					return nil, err
+				}
+				f := &File{
+					Header: th,
+					path:   path.Join(arHeader.Name, th.Name),
+				}
+				f.Contents, err = chunker.Chunk(tReader, putter)
+				if err != nil {
+					return nil, err
+				}
+				d.Files = append(d.Files, f)
 			}
-			if err != nil {
-				return nil, err
-			}
+		} else {
 			f := &File{
-				Header: th,
-				path:   path.Join(arHeader.Name, th.Name),
+				path: path.Join(arHeader.Name, arHeader.Name),
 			}
-			f.Contents, err = chunker.Chunk(tReader, putter)
+			f.Contents, err = chunker.Chunk(xzReader, putter)
 			if err != nil {
 				return nil, err
 			}

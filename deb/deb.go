@@ -37,7 +37,7 @@ func (dr *DebManager) AddPath(path string) error {
 
 // Add read a de b package
 func (dr *DebManager) Add(r io.Reader, name string) error {
-	d, err := ReadPackage(r, name, dr.dataStore)
+	d, err := ReadPackage(r, name, dr.dataStore, false)
 	bin, err := d.ToBin()
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func (dr *DebManager) Add(r io.Reader, name string) error {
 }
 
 func (dr *DebManager) GetDeb(name string) (*Deb, error) {
-	return nil, nil
+	return nil, nil // [FIXME]
 }
 
 func (dr *DebManager) pathToDeb(path string) (*Deb, error) {
