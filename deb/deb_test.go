@@ -11,7 +11,7 @@ import (
 func TestRead(t *testing.T) {
 	f, err := os.Open("../fixtures/golang_1.24~2_arm64.deb")
 	assert.NoError(t, err)
-	d, err := ReadPackage(f, "golang_1.24~2_arm64.deb", nil)
+	d, err := ReadPackage(f, "golang_1.24~2_arm64.deb", nil, true)
 	assert.NoError(t, err)
 	b, err := d.ToBin()
 	assert.NoError(t, err)
