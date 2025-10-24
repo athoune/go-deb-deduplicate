@@ -11,9 +11,9 @@ import (
 	"github.com/athoune/go-deb-deduplicate/store"
 )
 
-const CHUNK_MIN_SIZE = 1 * 1000
-const CHUNK_NORMAL_SIZE = 5 * 1000
-const CHUNK_MAX_SIZE = 100 * 1000
+const CHUNK_MIN_SIZE = 300
+const CHUNK_NORMAL_SIZE = 500
+const CHUNK_MAX_SIZE = 700
 
 func Chunk(reader io.Reader, putter store.Putter) ([]byte, error) {
 	chunker, err := chunkers.NewChunker("fastcdc", reader,
