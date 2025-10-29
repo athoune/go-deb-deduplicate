@@ -33,9 +33,8 @@ type metaTest struct {
 	size   int
 }
 
-func (m *metaTest) SetPosition(whence, size int) error {
+func (m *metaTest) SetPosition(whence int) error {
 	m.whence = whence
-	m.size = size
 	return nil
 }
 

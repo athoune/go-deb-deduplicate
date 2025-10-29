@@ -8,7 +8,7 @@ import (
 const MIN_BUFFER_SIZE = 256 * 1024
 
 type DocumentMeta interface {
-	SetPosition(whence, size int) error
+	SetPosition(whence int) error
 }
 
 type position struct {
@@ -44,7 +44,7 @@ func (b *BufferedDocumentWriter) WriteDocument(doc DocumentMeta, data []byte) (i
 		if err != nil {
 			return 0, err
 		}
-		err = doc.SetPosition(b.poz, len(data))
+		err = doc.SetPosition(b.poz)
 		if err != nil {
 			return 0, err
 		}
@@ -76,7 +76,7 @@ func (b *BufferedDocumentWriter) flush() (int, error) {
 		return 0, err
 	}
 	for _, pz := range b.positions {
-		err = pz.meta.SetPosition(b.poz, pz.size)
+		err = pz.meta.SetPosition(b.poz)
 		if err != nil {
 			return 0, err
 		}
