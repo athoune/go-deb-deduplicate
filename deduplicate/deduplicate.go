@@ -1,7 +1,7 @@
 package deduplicate
 
 import (
-	"github.com/athoune/go-deb-deduplicate/warehouse"
+	"github.com/athoune/go-warehouse/warehouse"
 )
 
 type Deduplicate struct {

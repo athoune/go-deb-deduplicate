@@ -13,7 +13,6 @@ test:
 	go test -timeout 10s -cover ./buffered
 	go test -timeout 10s -cover ./chunker
 	go test -timeout 10s -cover ./deb
-	go test -timeout 10s -cover ./warehouse
 
 docker:
 	docker build -t deb-deduplicate .

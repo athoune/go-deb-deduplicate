@@ -3,7 +3,7 @@ package deduplicate
 import (
 	"github.com/athoune/go-deb-deduplicate/bytes"
 	"github.com/athoune/go-deb-deduplicate/deb"
-	"github.com/athoune/go-deb-deduplicate/warehouse"
+	"github.com/athoune/go-warehouse/warehouse"
 	bolt "go.etcd.io/bbolt"
 )
 
